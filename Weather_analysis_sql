@@ -1,0 +1,172 @@
+SELECT AVG(temperature)
+ FROM 
+ `project-9aae86fb-6509-4b9e-9e6.demos.nyc_weather` 
+ WHERE 
+  date BETWEEN '2020-06-01' AND '2020-06-30'
+  
+  LIMIT 1000
+
+  --query 1
+
+  SELECT date, temperature, wind_speed
+  FROM `project-9aae86fb-6509-4b9e-9e6.demos.nyc_weather` 
+
+  WHERE temperature > 80
+  AND wind_speed > 10;
+
+  --query 2 
+
+  SELECT date, temperature
+  FROM `project-9aae86fb-6509-4b9e-9e6.demos.nyc_weather` 
+  ORDER BY temperature DESC;
+    --Hottest day? Answer = 07/27/2020 90degrees
+
+
+  --query 3 
+
+  SELECT date, temperature
+  FROM `project-9aae86fb-6509-4b9e-9e6.demos.nyc_weather` 
+  ORDER BY temperature ASC
+  LIMIT 5;
+    --Coldest day: Answer = 02/15/2020 21.2 degrees
+
+    --Queary 4 rain with the most days
+    SELECT date, precipitation
+  FROM `project-9aae86fb-6509-4b9e-9e6.demos.nyc_weather` 
+  order by precipitation desc
+
+  ---Level 3-- Aggregations (VERY IMPORTANT)
+
+  ---9 Average temperature 
+   SELECT AVG(temperature) AS avg_temp
+  FROM `project-9aae86fb-6509-4b9e-9e6.demos.nyc_weather` 
+
+  --10 Maximum temperature recorded 
+
+  SELECT MAX(Temperature) AS max_temp
+  FROM `project-9aae86fb-6509-4b9e-9e6.demos.nyc_weather` 
+
+  --11 Total precipitation 
+  SELECT SUM(precipitation) AS total_rain
+  FROM `project-9aae86fb-6509-4b9e-9e6.demos.nyc_weather`; 
+
+  --12. Count total records
+
+ SELECT COUNT(*)
+ FROM `project-9aae86fb-6509-4b9e-9e6.demos.nyc_weather`;
+
+ ---Level 4- GROUP BY 
+ ---13. Average temperature per station
+
+ SELECT 
+  stn,
+  AVG(Temperature) AS avg_temp
+ FROM `project-9aae86fb-6509-4b9e-9e6.demos.nyc_weather`
+
+ GROUP BY stn;
+
+--Total rain per station
+
+ SELECT 
+  stn,
+  SUM(precipitation) AS Total_rain
+ FROM `project-9aae86fb-6509-4b9e-9e6.demos.nyc_weather`
+
+ GROUP BY stn
+ ORDER BY total_rain DESC;
+
+ --Level 5-Date Analysis
+
+ ---15. Extract year
+
+ SELECT 
+ EXTRACT (Year FROM date) AS year,
+ AVG(Temperature) AS Avg_temp
+ FROM `project-9aae86fb-6509-4b9e-9e6.demos.nyc_weather`
+ GROUP BY YEAR;
+
+ ----16. Average temperature by month
+
+  SELECT 
+  EXTRACT(month FROM date) AS month,
+  AVG(temperature) AS Avg_Temp,
+ 
+ FROM `project-9aae86fb-6509-4b9e-9e6.demos.nyc_weather`
+ GROUP BY month
+ ORDER BY month asc;
+
+--- Level 6-- Real Data Analyst Questions
+--17. Which day had the sthe strongest wind?
+
+
+  SELECT date, wind_speed
+  
+ 
+ FROM `project-9aae86fb-6509-4b9e-9e6.demos.nyc_weather`
+ ORDER BY Wind_speed DESC
+ LIMIT 1;
+
+ ---18. How many rainy days were there? 
+
+ 
+  SELECT COUNT(*)
+  
+ 
+ FROM `project-9aae86fb-6509-4b9e-9e6.demos.nyc_weather`
+
+ WHERE precipitation > 0;--asnwer 297
+
+
+---19. Average temperature on rainy days
+ SELECT 
+ AVG(precipitation)
+ FROM `project-9aae86fb-6509-4b9e-9e6.demos.nyc_weather`
+ WHERE precipitation >0;
+
+----20. Days with no wind
+SELECT 
+ date, wind_speed
+ FROM `project-9aae86fb-6509-4b9e-9e6.demos.nyc_weather`
+ WHERE wind_speed >0
+ ORDER BY wind_speed DESC;
+
+ ---21. Rank hottest days
+
+ SELECT 
+ date, 
+ temperature,
+ RANK()OVER(ORDER BY temperature DESC) AS temp_rank 
+FROM `project-9aae86fb-6509-4b9e-9e6.demos.nyc_weather`
+
+--22. Running temperature average
+
+SELECT 
+date, 
+temperature,
+AVG(temperature) OVER(ORDER BY date) AS running_avg
+FROM `project-9aae86fb-6509-4b9e-9e6.demos.nyc_weather`
+
+--Challenger
+
+--1. Find the top 5 windiest days
+
+SELECT  stn,
+        date,
+        wind_speed,
+
+FROM `project-9aae86fb-6509-4b9e-9e6.demos.nyc_weather`
+ORDER BY wind_speed DESC
+Limit 5;
+
+---FIND THE AVERAGE PRECIPTATION PER STATION
+
+SELECT  stn,
+        AVG(Precipitation) as Avg_Rain,
+
+FROM `project-9aae86fb-6509-4b9e-9e6.demos.nyc_weather`
+
+GROUP BY precipitation, stn
+ORDER BY precipitation desc
+
+
+;
